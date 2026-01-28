@@ -15,7 +15,7 @@ Each layer has a clear responsibility:
 - **Raw**: Original source CSV files
 - **Bronze**: Ingested data with basic structure and schema handling
 - **Silver**: Cleaned and transformed data
-- **Gold**: Final curated dataset ready for consumption and validation
+- **Gold**: Final curated dataset ready for consumption and validation. Gold layer validation includes data quality rules and visualizations.
 
 ---
 ```code
