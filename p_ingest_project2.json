@@ -1,0 +1,149 @@
+{
+    "name": "p_ingest_project2",
+    "properties": {
+        "activities": [
+            {
+                "name": "copy_raw_to_bronze",
+                "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobFSReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "DelimitedTextSink",
+                        "storeSettings": {
+                            "type": "AzureBlobFSWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextWriteSettings",
+                            "quoteAllText": true,
+                            "fileExtension": ".txt"
+                        }
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "ds_raw_project2",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "ds_raw_project2",
+                        "type": "DatasetReference"
+                    }
+                ]
+            },
+            {
+                "name": "Bronze_Notebook_project2",
+                "type": "DatabricksNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "copy_raw_to_bronze",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebookPath": "<path>"
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureDatabricks1",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "Silver_notebook_project2",
+                "type": "DatabricksNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Bronze_Notebook_project2",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebookPath": "<path>"
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureDatabricks1",
+                    "type": "LinkedServiceReference"
+                }
+            },
+            {
+                "name": "gold_notebook_project2",
+                "type": "DatabricksNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Silver_notebook_project2",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "notebookPath": "<path>"
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureDatabricks1",
+                    "type": "LinkedServiceReference"
+                }
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": "2026-01-28T18:13:31Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
