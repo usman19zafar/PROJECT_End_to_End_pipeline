@@ -1,4 +1,4 @@
-# Project 2 – End-to-End CSV Data Pipeline (Raw → Bronze → Silver → Gold)
+# Project – End-to-End CSV Data Pipeline (Raw → Bronze → Silver → Gold)
 
 ## Overview
 This project demonstrates an end-to-end data engineering pipeline that ingests raw CSV data, applies structured transformations, and produces curated datasets using a **Bronze, Silver, and Gold** layered architecture.
